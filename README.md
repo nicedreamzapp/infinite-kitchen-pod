@@ -10,8 +10,16 @@
 
 ![The Infinite Kitchen Pod on a city street at dusk](Images/web/09-street-pod-dusk.jpg)
 
+### [Download the investor brochure (PDF)](https://nicedreamzapp.github.io/infinite-kitchen-pod/docs/infinite-kitchen-brochure-web.pdf)
+
+7 pages, 3.4 MB. Also available: [full quality PDF (34 MB)](docs/infinite-kitchen-brochure.pdf) · [every number in text](docs/brochure.md) · [HTML version of the earlier brochure](https://nicedreamzapp.github.io/infinite-kitchen-pod/brochure.html)
+
 **Live site:** https://nicedreamzapp.github.io/infinite-kitchen-pod/
-**Investor brochure (6 pages, print ready):** https://nicedreamzapp.github.io/infinite-kitchen-pod/brochure.html
+
+| | | | |
+|---|---|---|---|
+| [![Brochure page 1](Images/web/brochure/page-1.jpg)](docs/infinite-kitchen-brochure-web.pdf) | [![Brochure page 2](Images/web/brochure/page-2.jpg)](docs/infinite-kitchen-brochure-web.pdf) | [![Brochure page 3](Images/web/brochure/page-3.jpg)](docs/infinite-kitchen-brochure-web.pdf) | [![Brochure page 4](Images/web/brochure/page-4.jpg)](docs/infinite-kitchen-brochure-web.pdf) |
+| [![Brochure page 5](Images/web/brochure/page-5.jpg)](docs/infinite-kitchen-brochure-web.pdf) | [![Brochure page 6](Images/web/brochure/page-6.jpg)](docs/infinite-kitchen-brochure-web.pdf) | [![Brochure page 7](Images/web/brochure/page-7.jpg)](docs/infinite-kitchen-brochure-web.pdf) | |
 
 ## What the pod is
 
@@ -24,6 +32,39 @@ A 12 ft by 10 ft pod, 9.5 ft tall (about 120 square feet), all electric on 480V 
 - **Self-contained.** A UL 710B ventless hood and UL 300 fire suppression mean no ductwork, so the pod can go where a restaurant can't.
 
 ![A robot arm tossing a stir fry in a high-heat wok](Images/web/12-high-heat-wok.jpg)
+
+## The menu: steakhouse dinners at about half the price
+
+Rich, quality ingredients, flame broiled to order. Every plate comes with garlic herb butter, mashed potatoes and seasonal asparagus.
+
+| Dish | Infinite Kitchen | Traditional steakhouse |
+|---|---|---|
+| Ribeye | **$28** | $55 |
+| Filet mignon | **$32** | $65 |
+| Lobster tail | **$34** | $70 |
+| Salmon | **$24** | $48 |
+| Surf and turf | **$38** | $85 |
+| Catch of the day | **$26** | $52 |
+
+Steakhouse prices are illustrative comparisons from the brochure, not quotes from a specific restaurant.
+
+| | |
+|---|---|
+| ![A robot arm placing a ribeye on an electric infrared charbroiler](Images/web/13-flame-grill-ribeye.jpg) | ![Steak, lobster and salmon](Images/web/14-steak-lobster-salmon.jpg) |
+| **980°F infrared charbroiler, all electric, no gas hose** | **Ribeye, filet, salmon and lobster tail** |
+
+## What it can cook
+
+<img src="Images/web/17-what-we-can-cook.jpg" width="420" alt="What We Can Cook: flame charbroiled American, Asian wok, seafood and global bowls" align="right">
+
+- **Flame charbroiled American:** ribeye, burgers, chicken
+- **Asian wok:** pad thai, orange chicken, fried rice
+- **Seafood:** lobster tail, salmon, shrimp
+- **Global bowls:** gyro, burrito and Mediterranean bowls
+
+One pod switches between a charbroiler, two woks and a multi-cook oven, so a single menu can cover a steakhouse, a wok bar and a bowl shop.
+
+<br clear="right">
 
 ## Cheaper meals, same good food
 
@@ -48,9 +89,20 @@ And for whoever owns one:
 
 These numbers come from the revised brochure and are early estimates. The audit document uses more conservative figures, and reconciling the two is one of the [open issues](https://github.com/nicedreamzapp/infinite-kitchen-pod/issues/8).
 
+## Customized to your needs
+
+One chassis, four configurations, same robot, your brand.
+
+![Configuration sheet: glass curbside, solid stainless mall, compact kiosk and gutted kitchen retrofit](Images/web/16-customization-configs.jpg)
+
+1. **Glass curbside:** high visibility, QR ordering, sidewalk deployment
+2. **Solid secure:** malls and nighttime; metal covers the windows, no glass
+3. **Compact kiosk:** 1.8 m x 2.4 m for campuses and transit hubs
+4. **Gutted retrofit:** modules drop into a failed kitchen shell, 48 hour install, no construction
+
 ## Two ways to get one
 
-The [brochure](https://nicedreamzapp.github.io/infinite-kitchen-pod/brochure.html) lays out two plans (early estimates):
+The [brochure](docs/infinite-kitchen-brochure-web.pdf) lays out two plans (early estimates):
 
 - **Plan 1, turnkey purchase:** $185,000 per pod upfront, a $1,200 a month cloud platform fee, 4.5 month simple payback.
 - **Plan 2, robot as a service:** $15,000 for site setup and commissioning, then $8,500 a month covering hardware, software, telemetry, maintenance and replacement parts.
@@ -71,6 +123,8 @@ Either way the operator's costs stay low, so the menu prices can too.
 | **Full system cutaway** | **Wash station** |
 | ![Heated and chilled pickup lockers](Images/web/03-pickup-lockers.jpg) | ![Drone and vehicle delivery](Images/web/06-drone-car-delivery.jpg) |
 | **Pickup lockers** | **Drone and car delivery** |
+| ![Ribeye on the infrared charbroiler](Images/web/13-flame-grill-ribeye.jpg) | ![Glass curbside pod](Images/web/18-glass-cube-pod.jpg) |
+| **Flame grill** | **Glass curbside configuration** |
 
 Web-sized images are in [`Images/web/`](Images/web/). The full resolution files in [`Images/`](Images/) are the earlier concept renders the brochure uses.
 
@@ -103,7 +157,10 @@ Either way, the money not spent on buildout and rent is money that does not have
 
 | File | What it is |
 |---|---|
-| [brochure.html](brochure.html) | The 6-page investor brochure (print to PDF from the browser) |
+| [docs/infinite-kitchen-brochure-web.pdf](docs/infinite-kitchen-brochure-web.pdf) | The 7-page investor brochure, web size (3.4 MB) |
+| [docs/infinite-kitchen-brochure.pdf](docs/infinite-kitchen-brochure.pdf) | The same brochure at full quality (34 MB) |
+| [docs/brochure.md](docs/brochure.md) | Every number and claim from the brochure in text: menu prices, configurations, plans, cuisines |
+| [brochure.html](brochure.html) | HTML version of the earlier 6-page brochure (print to PDF from the browser) |
 | [docs/revised-cad-bom.pdf](docs/revised-cad-bom.pdf) | Revised CAD layout, BOM, P&L and sanitation protocol (2 pages) |
 | [docs/technical-audit.md](docs/technical-audit.md) | Engineering and financial audit: water heating, arm timing, BOM, P&L, hood and fire, materials, allergens |
 | [docs/cip-spec.md](docs/cip-spec.md) | Clean-in-place sanitation hardware and regulatory blueprint |
