@@ -8,20 +8,22 @@
 
 **Status:** early concept. The architecture, the bill of materials, the water and power math and a full set of renders are here. No prototype has been built yet, and there are real engineering problems still open ([help wanted](#status-early-concept-help-wanted)).
 
-![The Infinite Kitchen Pod on a city curb](Images/web/02-city-curbside.jpg)
+![The Infinite Kitchen Pod on a city street at dusk](Images/web/09-street-pod-dusk.jpg)
 
 **Live site:** https://nicedreamzapp.github.io/infinite-kitchen-pod/
 **Investor brochure (6 pages, print ready):** https://nicedreamzapp.github.io/infinite-kitchen-pod/brochure.html
 
 ## What the pod is
 
-A pod about the size of a parking space that runs a full kitchen on its own:
+A 12 ft by 10 ft pod, 9.5 ft tall (about 120 square feet), all electric on 480V 3-phase with no gas line, that runs a full kitchen on its own:
 
 - **Cold storage and dosing.** A refrigerated zone holds ingredient cartridges that a person restocks once a day. Load-cell dispensers portion dry and diced ingredients to about half a gram; pumps dose sauces and oils.
 - **Cooking.** A 6-axis collaborative arm on a linear track works two 5 kW induction woks and a ventless multi-cook oven. Wok sear, steam, bake, pasta and cold bowls.
 - **Self-cleaning.** After every meal the wok and tools get a 3-stage wash: a hot water blast, an ultrasonic sanitizer dip and a 180°F rinse. Off-peak, a full clean-in-place cycle sprays the cell down with rotating spray balls into a sloped stainless basin.
 - **Packing and handoff.** Meals are heat-sealed, labeled and delivered to heated and chilled pickup lockers, a delivery vehicle bay, or a rooftop drone pad.
 - **Self-contained.** A UL 710B ventless hood and UL 300 fire suppression mean no ductwork, so the pod can go where a restaurant can't.
+
+![A robot arm tossing a stir fry in a high-heat wok](Images/web/12-high-heat-wok.jpg)
 
 ## Cheaper meals, same good food
 
@@ -59,16 +61,18 @@ Either way the operator's costs stay low, so the menu prices can too.
 
 | | |
 |---|---|
-| ![The pod, overview](Images/web/01-pod-overview.jpg) | ![The pod on a city curb](Images/web/02-city-curbside.jpg) |
-| **Pod overview** | **Curbside in the city** |
-| ![Heated and chilled pickup lockers](Images/web/03-pickup-lockers.jpg) | ![Robot arm working two induction woks](Images/web/04-robot-arm-woks.jpg) |
-| **Pickup lockers** | **Robot arm and woks** |
-| ![Clean-in-place wash station](Images/web/05-wash-station.jpg) | ![Drone and vehicle delivery](Images/web/06-drone-car-delivery.jpg) |
-| **Wash station** | **Drone and car delivery** |
-| ![Exterior drawn to the CAD spec](Images/web/07-exterior-cad.jpg) | ![Cutaway showing every part](Images/web/08-cutaway-all-parts.jpg) |
-| **Exterior to CAD spec** | **Cutaway, all parts** |
+| ![Street pod at dusk](Images/web/09-street-pod-dusk.jpg) | ![Glass-walled street pod](Images/web/01-pod-overview.jpg) |
+| **Street pod at dusk** | **Glass walls** |
+| ![High-heat robotic wok](Images/web/12-high-heat-wok.jpg) | ![Ingredient dispensing and cooking line](Images/web/04-robot-arm-woks.jpg) |
+| **High-heat wok** | **Ingredient dispensing** |
+| ![Gutted kitchen, before and after](Images/web/10-retrofit-before-after.jpg) | ![The pod inside a gutted kitchen](Images/web/11-pod-in-gutted-kitchen.jpg) |
+| **Retrofit, before and after** | **Pod in a gutted kitchen** |
+| ![Full system cutaway](Images/web/08-cutaway-all-parts.jpg) | ![Clean-in-place wash station](Images/web/05-wash-station.jpg) |
+| **Full system cutaway** | **Wash station** |
+| ![Heated and chilled pickup lockers](Images/web/03-pickup-lockers.jpg) | ![Drone and vehicle delivery](Images/web/06-drone-car-delivery.jpg) |
+| **Pickup lockers** | **Drone and car delivery** |
 
-Full resolution originals are in [`Images/`](Images/).
+Web-sized images are in [`Images/web/`](Images/web/). The full resolution files in [`Images/`](Images/) are the earlier concept renders the brochure uses.
 
 ## How it compares
 
@@ -85,6 +89,10 @@ Other companies are automating kitchens, but with closed designs, and most autom
 The pod is the whole kitchen, it is owned instead of rented, and it is open. All three keep menu prices low while the ingredients stay good. Details: [docs/competition.md](docs/competition.md).
 
 ## Deploy as a pod, or drop it into an existing kitchen
+
+| | |
+|---|---|
+| ![Before and after: a gutted commercial kitchen turned robotic](Images/web/10-retrofit-before-after.jpg) | ![The pod installed inside a gutted kitchen](Images/web/11-pod-in-gutted-kitchen.jpg) |
 
 - **Into a second-generation kitchen.** A gutted restaurant space that still has its hood, fire suppression, grease trap and plumbing saves an estimated **$67,000 to $238,000** in buildout. The cooking cell drops in and reuses all of it.
 - **As a self-contained pod.** Its own ventless hood and clean-in-place system let it sit on a sidewalk or in a parking lot, with no ductwork, no walls and no restaurant lease.
