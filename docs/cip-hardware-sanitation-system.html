@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Kitchen Pod - CIP Self-Sanitizing Hardware & Regulatory Report</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            overflow: hidden;
+            user-select: none;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .annotation-pin {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            pointer-events: auto;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 10;
+        }
+        .annotation-pin:hover {
+            transform: translate(-50%, -105%) scale(1.06);
+            z-index: 20;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col lg:flex-row bg-slate-950 text-slate-100">
+
+    <!-- Sidebar / Detailed Sanitation & Hardware Engineering Panel -->
+    <aside class="w-full lg:w-[480px] h-1/2 lg:h-full flex flex-col border-b lg:border-r border-slate-800 bg-slate-900/95 z-20 flex-shrink-0">
+        <!-- Title Header -->
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/70">
+            <div>
+                <h1 class="font-bold text-base text-cyan-400 flex items-center gap-2">
+                    <i class="fa-solid fa-shower text-cyan-400"></i> Pod CIP Sanitation Hardware
+                </h1>
+                <p class="text-xs text-slate-400">Clean-In-Place Systems & Regulatory Engineering</p>
+            </div>
+            <span class="px-2.5 py-1 text-[11px] font-mono rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                NSF/ANSI 169
+            </span>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-slate-800 text-xs font-medium bg-slate-950/40">
+            <button id="tab-controls" onclick="switchTab('controls')" class="flex-1 py-3 text-cyan-400 border-b-2 border-cyan-400 transition">
+                <i class="fa-solid fa-sliders mr-1"></i> 3D Views & Simulation
+            </button>
+            <button id="tab-sanitation" onclick="switchTab('sanitation')" class="flex-1 py-3 text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-file-contract mr-1"></i> Code Compliance
+            </button>
+            <button id="tab-maintenance" onclick="switchTab('maintenance')" class="flex-1 py-3 text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-screwdriver-wrench mr-1"></i> PM Schedule
+            </button>
+        </div>
+
+        <!-- TAB 1: 3D Controls & Hardware Overview -->
+        <div id="content-controls" class="flex-1 overflow-y-auto p-4 space-y-5">
+            <!-- Animation & View Actions -->
+            <div>
+                <label class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2 block">Hardware Simulation Controls</label>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <button id="washdown-btn" onclick="toggleWashdownAnimation()" class="p-2.5 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-left transition flex items-center gap-2 shadow-lg shadow-cyan-950/50">
+                        <i class="fa-solid fa-spray-can-sparkles"></i> <span id="washdown-btn-text">Start CIP Spray Cycle</span>
+                    </button>
+                    <button id="explode-btn" onclick="toggleExplodedView()" class="p-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-left border border-slate-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-up-down-left-right text-emerald-400"></i> Explode Hardware
+                    </button>
+                </div>
+            </div>
+
+            <!-- Isolation Filters -->
+            <div>
+                <label class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2 block">Component Focus</label>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <button onclick="isolateSystem('all')" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-left border border-slate-700 transition">
+                        ● All CIP Hardware
+                    </button>
+                    <button onclick="isolateSystem('manifold')" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-left border border-slate-700 transition">
+                        ● Fluid Manifold & Pumps
+                    </button>
+                    <button onclick="isolateSystem('basin')" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300 text-left border border-slate-700 transition">
+                        ● Sloped Basin & Drain
+                    </button>
+                    <button onclick="isolateSystem('ultrasonic')" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-purple-300 text-left border border-slate-700 transition">
+                        ● Ultrasonic Tool Tank
+                    </button>
+                    <button onclick="isolateSystem('electrical')" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 text-left border border-slate-700 transition">
+                        ● Electrical Junction Box
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hardware Component Description Box -->
+            <div class="p-4 rounded-lg bg-slate-950/80 border border-slate-800">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-slate-300">Selected Subsystem Specs</span>
+                    <i class="fa-solid fa-microchip text-cyan-400 text-xs"></i>
+                </div>
+                <h3 id="inspector-title" class="font-bold text-cyan-400 text-sm mb-1">Click any hardware component pin</h3>
+                <p id="inspector-desc" class="text-xs text-slate-400 leading-relaxed">Select a 3D label or component to inspect fluid routing pressure, material ratings (316L SS vs Delrin), IP ratings, and electrical connections.</p>
+            </div>
+        </div>
+
+        <!-- TAB 2: Sanitation Standards & Regulatory Engineering -->
+        <div id="content-sanitation" class="flex-1 overflow-y-auto p-4 hidden space-y-4 text-xs leading-relaxed">
+            <div class="p-3 rounded bg-cyan-950/40 border border-cyan-800/50 text-cyan-200">
+                <h4 class="font-bold text-sm text-cyan-300 mb-1"><i class="fa-solid fa-shield-halved mr-1"></i> Global Sanitation Compliance Matrix</h4>
+                <p class="text-[11px] text-cyan-300/80">To pass health inspections worldwide without human kitchen staff, the hardware must fulfill strict automated Clean-In-Place (CIP) engineering protocols.</p>
+            </div>
+
+            <!-- NSF / FDA Requirements -->
+            <div class="space-y-3">
+                <div class="p-3 rounded bg-slate-950 border border-slate-800">
+                    <h5 class="font-semibold text-slate-200 text-xs mb-1 text-emerald-400">1. NSF/ANSI Standard 169 (Special Purpose Food Equipment)</h5>
+                    <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                        <li><strong class="text-slate-200">Seamless Internal Radii:</strong> All internal pod corners must feature continuous smooth radii ($R \ge 3.2\text{ mm}$) to prevent bacterial harbor points. No 90-degree internal joints.</li>
+                        <li><strong class="text-slate-200">Self-Draining Surfaces:</strong> Horizontal planes angled at minimum 15° pitch so liquids drain completely via gravity under zero airflow.</li>
+                        <li><strong class="text-slate-200">Non-Toxic Contact Materials:</strong> Food-zone metal must be AISI 316L Stainless Steel. Non-metallic parts limited to NSF-certified PTFE, Delrin (POM), or FDA Viton seals.</li>
+                    </ul>
+                </div>
+
+                <div class="p-3 rounded bg-slate-950 border border-slate-800">
+                    <h5 class="font-semibold text-slate-200 text-xs mb-1 text-cyan-400">2. FDA Food Code (2022 Chapter 4 - Equipment & Utensils)</h5>
+                    <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                        <li><strong class="text-slate-200">Thermal Sanitization Protocol:</strong> High-pressure hot water loop must deliver $\ge 180^\circ\text{F}\ (82^\circ\text{C})$ at the spray ball nozzle surface for minimum 15-second contact duration.</li>
+                        <li><strong class="text-slate-200">Chemical Sanitization Alternative:</strong> Dual-injection manifold supplies 200 PPM Quaternary Ammonium or 150–200 PPM Peracetic Acid (PAA) at $75^\circ\text{F}\ (24^\circ\text{C})$.</li>
+                        <li><strong class="text-slate-200">Air Gap Plumbing Protection:</strong> 2-inch physical air gap required between pod floor drain outlet and building sewer line to eliminate back-siphonage risks.</li>
+                    </ul>
+                </div>
+
+                <div class="p-3 rounded bg-slate-950 border border-slate-800">
+                    <h5 class="font-semibold text-slate-200 text-xs mb-1 text-purple-400">3. EU Regulation EC 1935/2004 & EN 1672-2</h5>
+                    <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                        <li><strong class="text-slate-200">Electropolished Surfaces:</strong> Internal wall finish $Ra \le 0.8\,\mu\text{m}$ to prevent biofilm adhesion.</li>
+                        <li><strong class="text-slate-200">Hygienic Fasteners:</strong> Hex-head bolts and exposed threads are strictly forbidden inside cooking zones; all fasteners must be externalized or flush-welded.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Electrical & Wiring Setup -->
+            <div class="p-3 rounded bg-slate-950 border border-slate-800 space-y-2">
+                <h5 class="font-semibold text-amber-400 text-xs"><i class="fa-solid fa-bolt mr-1"></i> Electrical & Wiring Interface Topology</h5>
+                <p class="text-[11px] text-slate-400">
+                    All power relays and sensor wiring pass through an externalized IP69K stainless steel junction box.
+                </p>
+                <div class="font-mono text-[10px] bg-slate-900 p-2.5 rounded border border-slate-800 text-slate-300 space-y-1">
+                    <div>[J-BOX] 24VDC Solenoid Bank ──► M12 IP69K Armored Conduit ──► 12x CIP Valve Solenoids</div>
+                    <div>[J-BOX] 220VAC / 40A SSR Loop ──► Inline Thermal Water Heater (180°F Boost)</div>
+                    <div>[J-BOX] 40kHz Ultrasonic Transducer Array ──► High-Power PZT Cavitation Tank</div>
+                    <div>[ANTENNA] Dual High-Gain Waterproof Omni Antenna (Wi-Fi 6E / Hardwired M12 Ethernet)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Preventive Maintenance Schedule -->
+        <div id="content-maintenance" class="flex-1 overflow-y-auto p-4 hidden space-y-3 text-xs">
+            <div class="p-3 rounded bg-slate-950 border border-slate-800">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-emerald-400">Daily Maintenance (Automated + 5-Min Visual)</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px]">Daily</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                    <li>Run 10-minute automated CIP thermal rinse cycle before start of breakfast/dinner sessions.</li>
+                    <li>Inspect primary 2" tri-clamp drain trap screen for solid food particles; empty catch basket.</li>
+                    <li>Verify chemical sanitizer reservoir levels (Quat/PAA concentration swab test).</li>
+                </ul>
+            </div>
+
+            <div class="p-3 rounded bg-slate-950 border border-slate-800">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-cyan-400">Weekly Component Inspection</span>
+                    <span class="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 text-[10px]">Weekly</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                    <li>Check all 12 rotating CIP spray nozzles for mineral scale buildup or orifice blockage.</li>
+                    <li>Inspect ultrasonic tool bath tank for sediment accumulation; flush transducer fluid.</li>
+                    <li>Test emergency hardware safety shutdown relay and solenoid override switches.</li>
+                </ul>
+            </div>
+
+            <div class="p-3 rounded bg-slate-950 border border-slate-800">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-purple-400">Monthly Deep Servicing</span>
+                    <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 text-[10px]">Monthly</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                    <li>Descaling cycle: Flush fluid lines with food-grade citric/phosphoric acid solution.</li>
+                    <li>Inspect sanitary Viton door gaskets and airlock pneumatic seals for micro-cracks.</li>
+                    <li>Check M12 electrical conduit glands and IP69K junction box seals for moisture ingress.</li>
+                </ul>
+            </div>
+
+            <div class="p-3 rounded bg-slate-950 border border-slate-800">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-bold text-amber-400">Annual Overhaul</span>
+                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px]">Annual</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                    <li>Replace all internal solenoid valve diaphragms and rotating spray ball bearings.</li>
+                    <li>Recalibrate inline temperature sensors (Pt100 RTDs) and pressure transducers.</li>
+                    <li>Full third-party ATP bioluminescence swab audit across all internal pod surfaces.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-3 border-t border-slate-800 text-[11px] text-slate-500 flex justify-between bg-slate-950/90">
+            <span>Hardware Engineering Edition</span>
+            <span class="font-mono text-cyan-400">NSF / FDA / EC Compliant</span>
+        </div>
+    </aside>
+
+    <!-- Main 3D Canvas Viewport -->
+    <main class="relative flex-1 h-1/2 lg:h-full bg-slate-950 overflow-hidden">
+        <div id="canvas-container" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+        <!-- View Controls Top Right -->
+        <div class="absolute top-4 right-4 z-10 flex gap-2">
+            <button onclick="resetCamera()" class="p-2.5 rounded-lg glass-panel hover:bg-slate-800/80 text-slate-200 text-xs transition border border-slate-700/50 shadow-xl" title="Reset View">
+                <i class="fa-solid fa-arrows-to-dot"></i> Reset Camera
+            </button>
+        </div>
+
+        <!-- System Status Overlay -->
+        <div class="absolute bottom-4 left-4 z-10 glass-panel p-3.5 rounded-xl border border-slate-800 text-[11px] space-y-1.5 pointer-events-none">
+            <div class="font-semibold text-slate-200 flex items-center gap-2">
+                <span id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+                <span id="status-text">CIP System Standby (Dry State)</span>
+            </div>
+            <div class="text-slate-400 font-mono text-[10px] space-y-0.5">
+                <div>Manifold Pressure: <span id="telemetry-pressure" class="text-slate-200">0 PSI</span></div>
+                <div>Fluid Temperature: <span id="telemetry-temp" class="text-slate-200">70°F (Ambient)</span></div>
+                <div>Drain Flow Rate: <span id="telemetry-flow" class="text-slate-200">0 GPM</span></div>
+            </div>
+        </div>
+
+        <!-- Dynamic Screen-Space 3D Annotation Pins -->
+        <div id="annotations-container" class="absolute inset-0 pointer-events-none z-10"></div>
+    </main>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- 1. DATA DEFINITIONS & ANNOTATIONS ---
+        const hardwareSpecs = {
+            basin: {
+                title: "15° Sloped 316L SS Drain Basin",
+                desc: "316L stainless steel floor welded with continuous $R \ge 3.2\text{ mm}$ seamless radii. Angled at 15° pitch so high-velocity washdown fluid gravity-drains into the 2\" sanitary tri-clamp drain outlet under NSF 169 requirements.",
+                mat: "316L Stainless Steel (Electropolished Ra <= 0.4um)"
+            },
+            manifold: {
+                title: "Dual-Stage CIP Fluid Manifold",
+                desc: "Supplies high-pressure hot water (180°F @ 80 PSI) for thermal sanitization, and secondary chemical sanitizer line (Quat/PAA 200 PPM). Controlled via dual 24VDC solenoid manifold bank.",
+                mat: "316 SS Manifold Block & PTFE Hoses"
+            },
+            spray: {
+                title: "360° Rotating CIP Spray Balls (12x)",
+                desc: "Fluid-driven 360-degree rotating spray balls positioned strategically across the pod ceiling and corners to eliminate spray shadow zones and scour all internal cooking surfaces.",
+                mat: "316L Stainless Steel Rotating Bearings"
+            },
+            ultrasonic: {
+                title: "40kHz Ultrasonic Tool Cleaning Bath",
+                desc: "Base-mounted cavitation tank powered by 40kHz PZT transducers. Robotic tools and spatulas submerge here between meal runs for 30-second acoustic deep cleaning without mechanical wear.",
+                mat: "316L SS Tank with PZT Transducer Array"
+            },
+            electrical: {
+                title: "IP69K Junction Enclosure & Wiring",
+                desc: "Hermetically sealed junction box carrying 40A solid-state relays (SSRs), solenoid controls, and emergency hardware watchdog relays. Interfaces externally via heavy-duty armored M12 quick-disconnect cables.",
+                mat: "IP69K Stainless Enclosure & M12 Glands"
+            },
+            antenna: {
+                title: "Dual Wi-Fi 6E & M12 Ethernet Antenna",
+                desc: "Waterproof external high-gain dual antenna array providing local low-latency wireless and hardwired network connectivity for remote hardware status monitoring.",
+                mat: "IP67 Polycarbonate & Gold-Plated SMA"
+            },
+            drain: {
+                title: "2\" Sanitary Drain Trap & Solid Separator",
+                desc: "Tri-clamp sanitary drain coupling connected to an inline removable solids basket and automatic grease interceptor before connecting to municipal sewer line via a 2\" air gap.",
+                mat: "Food-Grade Viton Gaskets & 316 SS Trap"
+            }
+        };
+
+        const pinLocations = [
+            { id: 'basin', name: 'Sloped Basin (15° Pitch)', pos: new THREE.Vector3(0, -1.05, 0) },
+            { id: 'drain', name: '2" Tri-Clamp Drain Trap', pos: new THREE.Vector3(0, -1.35, 0) },
+            { id: 'manifold', name: 'CIP Fluid Manifold', pos: new THREE.Vector3(0, 1.25, -0.6) },
+            { id: 'spray', name: '360° Rotating Spray Balls', pos: new THREE.Vector3(-0.6, 1.15, 0.4) },
+            { id: 'ultrasonic', name: 'Ultrasonic Tool Bath', pos: new THREE.Vector3(0.65, -0.75, 0.2) },
+            { id: 'electrical', name: 'IP69K Junction Box', pos: new THREE.Vector3(-1.1, 0.2, -0.7) },
+            { id: 'antenna', name: 'Wi-Fi 6E Antenna Array', pos: new THREE.Vector3(-1.15, 1.35, -0.7) }
+        ];
+
+        // --- 2. THREE.JS ENGINE & SCENE SETUP ---
+        let scene, camera, renderer, controls;
+        let podGroup, basinMesh, manifoldMesh, sprayGroup, ultrasonicMesh, electricalMesh, drainMesh, sprayParticles = [];
+        let isExploded = false;
+        let isWashing = false;
+        let currentIsolation = 'all';
+
+        const canvasContainer = document.getElementById('canvas-container');
+        const annotationsContainer = document.getElementById('annotations-container');
+
+        function init3D() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x070a12);
+            scene.fog = new THREE.FogExp2(0x070a12, 0.08);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(45, canvasContainer.clientWidth / canvasContainer.clientHeight, 0.1, 100);
+            camera.position.set(3.6, 2.2, 4.2);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            canvasContainer.appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 + 0.05;
+            controls.minDistance = 1.8;
+            controls.maxDistance = 9;
+
+            // Lighting
+            setupLighting();
+
+            // Build Models
+            buildCIPHardwareModel();
+
+            // Create Spray Particle System
+            createSprayParticles();
+
+            // Event Listeners
+            window.addEventListener('resize', onWindowResize);
+            renderer.domElement.addEventListener('pointerdown', onDocumentPointerDown);
+
+            // Animation Loop
+            animate();
+        }
+
+        function setupLighting() {
+            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambient);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            dirLight.position.set(4, 7, 4);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            scene.add(dirLight);
+
+            // Cyan & Violet Industrial Rim Lighting
+            const cyanRim = new THREE.PointLight(0x06b6d4, 2, 6);
+            cyanRim.position.set(-2.5, 2, -2.5);
+            scene.add(cyanRim);
+
+            const purpleRim = new THREE.PointLight(0xa855f7, 1.5, 6);
+            purpleRim.position.set(2.5, -1, 2.5);
+            scene.add(purpleRim);
+
+            // Floor Grid
+            const grid = new THREE.GridHelper(10, 20, 0x1e293b, 0x0f172a);
+            grid.position.y = -1.5;
+            scene.add(grid);
+        }
+
+        // --- 3. HARDWARE GEOMETRY ASSEMBLY ---
+        function buildCIPHardwareModel() {
+            podGroup = new THREE.Group();
+            scene.add(podGroup);
+
+            // Materials
+            const steelMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 0.25, metalness: 0.85 });
+            const darkSteelMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.75 });
+            const cyanPipeMat = new THREE.MeshStandardMaterial({ color: 0x0891b2, roughness: 0.3, metalness: 0.6 });
+            const purpleTankMat = new THREE.MeshStandardMaterial({ color: 0x7e22ce, roughness: 0.3, metalness: 0.7 });
+            const goldMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.2, metalness: 0.9 });
+            const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.2, transmission: 0.85 });
+
+            // A. SLOPED DRAIN BASIN & FRAME
+            basinMesh = new THREE.Group();
+            
+            // 15-degree sloped bottom plate
+            const basinShape = new THREE.Shape();
+            basinShape.moveTo(-1.25, -1.0);
+            basinShape.lineTo(1.25, -1.0);
+            basinShape.lineTo(1.15, -1.25);
+            basinShape.lineTo(-1.15, -1.25);
+            const extrudeSettings = { depth: 1.8, bevelEnabled: false };
+            const basinGeo = new THREE.ExtrudeGeometry(basinShape, extrudeSettings);
+            const basinPlate = new THREE.Mesh(basinGeo, steelMat);
+            basinPlate.rotation.x = Math.PI / 2;
+            basinPlate.position.set(0, -0.1, -0.9);
+            basinMesh.add(basinPlate);
+
+            // Corner Support Structural Columns
+            const colGeo = new THREE.BoxGeometry(0.06, 2.5, 0.06);
+            [[-1.2, -0.9], [1.2, -0.9], [-1.2, 0.9], [1.2, 0.9]].forEach(pos => {
+                const col = new THREE.Mesh(colGeo, darkSteelMat);
+                col.position.set(pos[0], 0.1, pos[1]);
+                basinMesh.add(col);
+            });
+
+            // Enclosure Glass Outer Shell
+            const shell = new THREE.Mesh(new THREE.BoxGeometry(2.45, 2.5, 1.85), glassMat);
+            shell.position.set(0, 0.1, 0);
+            basinMesh.add(shell);
+
+            basinMesh.userData = { id: 'basin' };
+            podGroup.add(basinMesh);
+
+            // B. SANITARY DRAIN TRAP
+            drainMesh = new THREE.Group();
+            const drainPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.35, 16), steelMat);
+            drainPipe.position.set(0, -1.25, 0);
+            drainMesh.add(drainPipe);
+
+            const drainTrapBox = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.35), darkSteelMat);
+            drainTrapBox.position.set(0, -1.45, 0);
+            drainMesh.add(drainTrapBox);
+
+            drainMesh.userData = { id: 'drain' };
+            podGroup.add(drainMesh);
+
+            // C. DUAL CIP FLUID MANIFOLD
+            manifoldMesh = new THREE.Group();
+            
+            // Primary 180°F Hot Water Main
+            const mainManifold = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.2, 16), cyanPipeMat);
+            mainManifold.rotation.z = Math.PI / 2;
+            mainManifold.position.set(0, 1.25, -0.6);
+            manifoldMesh.add(mainManifold);
+
+            // Secondary Chemical Sanitizer Main
+            const chemManifold = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 2.2, 16), steelMat);
+            chemManifold.rotation.z = Math.PI / 2;
+            chemManifold.position.set(0, 1.32, -0.6);
+            manifoldMesh.add(chemManifold);
+
+            // Solenoid Valve Bank
+            for(let i = -2; i <= 2; i += 2) {
+                const valve = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.12), darkSteelMat);
+                valve.position.set(i * 0.4, 1.25, -0.6);
+                manifoldMesh.add(valve);
+            }
+
+            manifoldMesh.userData = { id: 'manifold' };
+            podGroup.add(manifoldMesh);
+
+            // D. 360° ROTATING CIP SPRAY BALLS
+            sprayGroup = new THREE.Group();
+            const sprayPositions = [
+                [-0.8, 1.15, -0.4], [0, 1.15, -0.4], [0.8, 1.15, -0.4],
+                [-0.8, 1.15, 0.4],  [0, 1.15, 0.4],  [0.8, 1.15, 0.4]
+            ];
+
+            sprayPositions.forEach(pos => {
+                const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.15, 12), steelMat);
+                stem.position.set(pos[0], pos[1] + 0.07, pos[2]);
+                sprayGroup.add(stem);
+
+                const ball = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), steelMat);
+                ball.position.set(pos[0], pos[1], pos[2]);
+                sprayGroup.add(ball);
+            });
+
+            sprayGroup.userData = { id: 'spray' };
+            podGroup.add(sprayGroup);
+
+            // E. ULTRASONIC TOOL CAVITATION TANK
+            ultrasonicMesh = new THREE.Group();
+            const tankOuter = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.35, 0.45), purpleTankMat);
+            tankOuter.position.set(0.65, -0.75, 0.2);
+            ultrasonicMesh.add(tankOuter);
+
+            const tankInner = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.32, 0.38), steelMat);
+            tankInner.position.set(0.65, -0.73, 0.2);
+            ultrasonicMesh.add(tankInner);
+
+            ultrasonicMesh.userData = { id: 'ultrasonic' };
+            podGroup.add(ultrasonicMesh);
+
+            // F. IP69K ELECTRICAL JUNCTION BOX & ANTENNA
+            electricalMesh = new THREE.Group();
+            const jbox = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.45, 0.35), darkSteelMat);
+            jbox.position.set(-1.22, 0.2, -0.6);
+            electricalMesh.add(jbox);
+
+            // Conduit Cable Glands
+            for(let y = 0.0; y <= 0.3; y += 0.15) {
+                const gland = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.1, 12), goldMat);
+                gland.rotation.z = Math.PI / 2;
+                gland.position.set(-1.1, y, -0.6);
+                electricalMesh.add(gland);
+            }
+
+            // Wi-Fi 6E Antenna Rods
+            [-0.05, 0.05].forEach(zOffset => {
+                const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.35, 12), darkSteelMat);
+                ant.position.set(-1.22, 1.25, -0.6 + zOffset);
+                electricalMesh.add(ant);
+            });
+
+            electricalMesh.userData = { id: 'electrical' };
+            podGroup.add(electricalMesh);
+        }
+
+        // --- 4. SPRAY FLUID ANIMATION PARTICLES ---
+        function createSprayParticles() {
+            const particleCount = 300;
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const velocities = [];
+
+            for(let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 1.8;
+                positions[i * 3 + 1] = 1.1;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 1.4;
+
+                velocities.push({
+                    x: (Math.random() - 0.5) * 0.04,
+                    y: -(Math.random() * 0.05 + 0.03),
+                    z: (Math.random() - 0.5) * 0.04
+                });
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const pMat = new THREE.PointsMaterial({
+                color: 0x38bdf8,
+                size: 0.035,
+                transparent: true,
+                opacity: 0.75
+            });
+
+            const pSystem = new THREE.Points(geo, pMat);
+            pSystem.name = "sprayParticles";
+            pSystem.visible = false;
+            pSystem.userData = { velocities: velocities };
+            scene.add(pSystem);
+        }
+
+        function updateSprayParticles() {
+            const pSystem = scene.getObjectByName("sprayParticles");
+            if (!pSystem || !pSystem.visible) return;
+
+            const positions = pSystem.geometry.attributes.position.array;
+            const vels = pSystem.userData.velocities;
+
+            for(let i = 0; i < vels.length; i++) {
+                positions[i * 3] += vels[i].x;
+                positions[i * 3 + 1] += vels[i].y;
+                positions[i * 3 + 2] += vels[i].z;
+
+                // Reset particle to top nozzle height if it hits basin floor
+                if (positions[i * 3 + 1] < -1.0) {
+                    positions[i * 3] = (Math.random() - 0.5) * 1.8;
+                    positions[i * 3 + 1] = 1.1;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1.4;
+                }
+            }
+            pSystem.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // --- 5. INTERACTIVE COMMANDS ---
+        function toggleWashdownAnimation() {
+            isWashing = !isWashing;
+            const btnText = document.getElementById('washdown-btn-text');
+            const pSystem = scene.getObjectByName("sprayParticles");
+            const statusInd = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+
+            if (isWashing) {
+                btnText.innerText = "Stop CIP Washdown";
+                pSystem.visible = true;
+                statusInd.className = "w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping";
+                statusText.innerText = "ACTIVE: Thermal CIP Washdown (180°F)";
+                document.getElementById('telemetry-pressure').innerText = "82 PSI";
+                document.getElementById('telemetry-temp').innerText = "181.4°F";
+                document.getElementById('telemetry-flow').innerText = "14.2 GPM";
+            } else {
+                btnText.innerText = "Start CIP Spray Cycle";
+                pSystem.visible = false;
+                statusInd.className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+                statusText.innerText = "CIP System Standby (Dry State)";
+                document.getElementById('telemetry-pressure').innerText = "0 PSI";
+                document.getElementById('telemetry-temp').innerText = "70°F (Ambient)";
+                document.getElementById('telemetry-flow').innerText = "0 GPM";
+            }
+        }
+
+        function toggleExplodedView() {
+            isExploded = !isExploded;
+            const duration = 450;
+            const startTime = performance.now();
+
+            const initPositions = {
+                basin: basinMesh.position.clone(),
+                manifold: manifoldMesh.position.clone(),
+                spray: sprayGroup.position.clone(),
+                ultrasonic: ultrasonicMesh.position.clone(),
+                electrical: electricalMesh.position.clone(),
+                drain: drainMesh.position.clone()
+            };
+
+            const targetPositions = {
+                basin: isExploded ? new THREE.Vector3(0, -0.4, 0) : new THREE.Vector3(0, 0, 0),
+                manifold: isExploded ? new THREE.Vector3(0, 0.5, -0.3) : new THREE.Vector3(0, 0, 0),
+                spray: isExploded ? new THREE.Vector3(0, 0.4, 0.2) : new THREE.Vector3(0, 0, 0),
+                ultrasonic: isExploded ? new THREE.Vector3(0.4, -0.3, 0.3) : new THREE.Vector3(0, 0, 0),
+                electrical: isExploded ? new THREE.Vector3(-0.5, 0, -0.3) : new THREE.Vector3(0, 0, 0),
+                drain: isExploded ? new THREE.Vector3(0, -0.5, 0) : new THREE.Vector3(0, 0, 0)
+            };
+
+            function step(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = t => t * (2 - t);
+
+                basinMesh.position.lerpVectors(initPositions.basin, targetPositions.basin, ease(progress));
+                manifoldMesh.position.lerpVectors(initPositions.manifold, targetPositions.manifold, ease(progress));
+                sprayGroup.position.lerpVectors(initPositions.spray, targetPositions.spray, ease(progress));
+                ultrasonicMesh.position.lerpVectors(initPositions.ultrasonic, targetPositions.ultrasonic, ease(progress));
+                electricalMesh.position.lerpVectors(initPositions.electrical, targetPositions.electrical, ease(progress));
+                drainMesh.position.lerpVectors(initPositions.drain, targetPositions.drain, ease(progress));
+
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        function isolateSystem(id) {
+            currentIsolation = id;
+            const items = [
+                { id: 'basin', obj: basinMesh },
+                { id: 'drain', obj: drainMesh },
+                { id: 'manifold', obj: manifoldMesh },
+                { id: 'spray', obj: sprayGroup },
+                { id: 'ultrasonic', obj: ultrasonicMesh },
+                { id: 'electrical', obj: electricalMesh }
+            ];
+
+            items.forEach(item => {
+                if (id === 'all' || item.id === id) {
+                    item.obj.visible = true;
+                } else {
+                    item.obj.visible = false;
+                }
+            });
+
+            if (id !== 'all' && hardwareSpecs[id]) {
+                selectHardwarePin(id);
+            }
+        }
+
+        function selectHardwarePin(id) {
+            const spec = hardwareSpecs[id] || hardwareSpecs['basin'];
+            document.getElementById('inspector-title').innerText = spec.title;
+            document.getElementById('inspector-desc').innerText = `${spec.desc} (Material: ${spec.mat})`;
+        }
+
+        function onDocumentPointerDown(event) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            const mouse = new THREE.Vector2(
+                ((event.clientX - rect.left) / rect.width) * 2 - 1,
+                -((event.clientY - rect.top) / rect.height) * 2 + 1
+            );
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(podGroup.children, true);
+
+            if (intersects.length > 0) {
+                let obj = intersects[0].object;
+                while (obj.parent && obj.parent !== podGroup && !obj.userData.id) {
+                    obj = obj.parent;
+                }
+                if (obj.userData.id) {
+                    selectHardwarePin(obj.userData.id);
+                }
+            }
+        }
+
+        function updateAnnotations() {
+            if (!annotationsContainer) return;
+            annotationsContainer.innerHTML = '';
+
+            const widthHalf = canvasContainer.clientWidth / 2;
+            const heightHalf = canvasContainer.clientHeight / 2;
+
+            const projected = pinLocations.map(pin => {
+                const worldPos = pin.pos.clone();
+                if (isExploded) {
+                    if (pin.id === 'manifold') worldPos.y += 0.5;
+                    if (pin.id === 'spray') worldPos.y += 0.4;
+                    if (pin.id === 'ultrasonic') worldPos.x += 0.4;
+                    if (pin.id === 'electrical' || pin.id === 'antenna') worldPos.x -= 0.5;
+                    if (pin.id === 'drain') worldPos.y -= 0.5;
+                }
+
+                let visible = true;
+                if (currentIsolation !== 'all' && pin.id !== currentIsolation) visible = false;
+
+                const screenPos = worldPos.project(camera);
+                const x = (screenPos.x * widthHalf) + widthHalf;
+                const y = -(screenPos.y * heightHalf) + heightHalf;
+
+                return {
+                    ...pin,
+                    x,
+                    y,
+                    visible: visible && screenPos.z < 1.0
+                };
+            });
+
+            // Prevent vertical label overlap
+            projected.sort((a, b) => a.y - b.y);
+            for (let i = 0; i < projected.length; i++) {
+                for (let j = i + 1; j < projected.length; j++) {
+                    if (Math.abs(projected[i].x - projected[j].x) < 140 && Math.abs(projected[i].y - projected[j].y) < 30) {
+                        projected[j].y += 26;
+                    }
+                }
+            }
+
+            projected.forEach(pin => {
+                if (!pin.visible) return;
+
+                const pinEl = document.createElement('div');
+                pinEl.className = 'annotation-pin flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 border border-cyan-500/50 text-cyan-300 text-[11px] font-medium shadow-xl backdrop-blur-md';
+                pinEl.style.left = `${pin.x}px`;
+                pinEl.style.top = `${pin.y}px`;
+                pinEl.onclick = () => selectHardwarePin(pin.id);
+
+                pinEl.innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>${pin.name}</span>
+                `;
+                annotationsContainer.appendChild(pinEl);
+            });
+        }
+
+        function resetCamera() {
+            camera.position.set(3.6, 2.2, 4.2);
+            controls.target.set(0, 0, 0);
+            isolateSystem('all');
+            if (isExploded) toggleExplodedView();
+            if (isWashing) toggleWashdownAnimation();
+        }
+
+        function switchTab(tab) {
+            const tabs = ['controls', 'sanitation', 'maintenance'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const content = document.getElementById(`content-${t}`);
+                if (t === tab) {
+                    btn.className = "flex-1 py-3 text-cyan-400 border-b-2 border-cyan-400 font-medium transition";
+                    content.classList.remove('hidden');
+                } else {
+                    btn.className = "flex-1 py-3 text-slate-400 hover:text-slate-200 font-medium transition";
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        function onWindowResize() {
+            camera.aspect = canvasContainer.clientWidth / canvasContainer.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            updateSprayParticles();
+            updateAnnotations();
+            renderer.render(scene, camera);
+        }
+
+        window.onload = init3D;
+    </script>
+</body>
+</html>
